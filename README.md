@@ -5,13 +5,12 @@
 ## 使い方
 
 ```
-python search_tool.py DIRECTORY QUERY [--ignore-case]
+python search_tool.py DIRECTORY QUERY [--ignore-case] [--ext EXT]
 ```
 
 - `DIRECTORY` ... 検索したいフォルダのパス
 - `QUERY` ... 探したい文字列
 - `--ignore-case`, `-i` ... 大文字小文字を区別しない
+- `--ext` ... 指定した拡張子のファイルのみ検索する（例: `.txt`）
 
 一致した行は `ファイルパス:行番号:行の内容` の形式で表示されます。
-
-

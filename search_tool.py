@@ -22,10 +22,22 @@ def search_in_file(file_path: Path, query: str, ignore_case: bool) -> None:
         pass
 
 
-def search_directory(directory: Path, query: str, ignore_case: bool) -> None:
-    """Recursively search files under directory for query."""
+def search_directory(directory: Path, query: str, ignore_case: bool, ext: str | None = None) -> None:
+    """Recursively search files under directory for query.
+
+    Parameters
+    ----------
+    directory: Path
+        Root directory to search.
+    query: str
+        String to look for.
+    ignore_case: bool
+        Whether to ignore case differences.
+    ext: str | None
+        If provided, only files with this extension (e.g. '.txt') are searched.
+    """
     for path in directory.rglob('*'):
-        if path.is_file():
+        if path.is_file() and (ext is None or path.suffix == ext):
             search_in_file(path, query, ignore_case)
 
 
@@ -41,12 +53,17 @@ def main() -> None:
         action="store_true",
         help="Perform case-insensitive search",
     )
+    parser.add_argument(
+        "--ext",
+        metavar="EXT",
+        help="Only search files with this extension (e.g. .txt)",
+    )
     args = parser.parse_args()
 
     directory = Path(args.directory)
     if not directory.is_dir():
         parser.error(f"{directory} is not a directory")
-    search_directory(directory, args.query, args.ignore_case)
+    search_directory(directory, args.query, args.ignore_case, args.ext)
 
 
 if __name__ == "__main__":
