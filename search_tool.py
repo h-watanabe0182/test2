@@ -26,12 +26,20 @@ def search_in_file(file_path: Path, query: str, ignore_case: bool) -> list[str]:
     return results
 
 
-def search_directory(directory: Path, query: str, ignore_case: bool, ext: str | None = None) -> list[str]:
+def search_directory(
+    directory: Path, query: str, ignore_case: bool, ext: str | None = None
+) -> list[str]:
     """Recursively search files under directory for query."""
+    if ext:
+        if not ext.startswith('.'):
+            ext = '.' + ext
+        ext = ext.lower()
+
     matches = []
     for path in directory.rglob('*'):
-        if path.is_file() and (ext is None or path.suffix == ext):
-            matches.extend(search_in_file(path, query, ignore_case))
+        if path.is_file():
+            if ext is None or path.suffix.lower() == ext:
+                matches.extend(search_in_file(path, query, ignore_case))
     return matches
 
 
