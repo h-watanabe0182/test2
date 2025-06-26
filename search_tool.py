@@ -2,6 +2,7 @@
 """File search tool with CLI and GUI interfaces."""
 
 import argparse
+import os
 from pathlib import Path
 import tkinter as tk
 from tkinter import filedialog, scrolledtext, messagebox
@@ -36,6 +37,9 @@ def search_directory(directory: Path, query: str, ignore_case: bool, ext: str | 
 
 def run_gui() -> None:
     """Launch GUI for searching files."""
+    if not os.environ.get("DISPLAY"):
+        raise RuntimeError("DISPLAY environment variable is not set")
+
     root = tk.Tk()
     root.title("File Search Tool")
 
@@ -95,7 +99,10 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.gui or not (args.directory and args.query):
-        run_gui()
+        try:
+            run_gui()
+        except RuntimeError as exc:
+            parser.error(str(exc))
         return
 
     directory = Path(args.directory)
